@@ -9,9 +9,12 @@
 
 #pragma once
 
+#include <glog/logging.h>
+
 #include <algorithm>
 #include <fstream>
 #include <iterator>
+#include <regex>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -24,13 +27,17 @@
 
 class groff {
  public:
+  std::string remove_template(const std::string &name) {
+    return std::regex_replace(name, std::regex(R"(<[^>]*>)"), "");
+  }
   void operator()(parse_state &state) {
     state.lines = get_lines(state.plain);
     if (state.lines.size() < 2) {
       throw std::runtime_error("insufficient lines in plain render");
     }
+    DCHECK(!state.lines.empty()) << "Content shouldn't be empty!";
 
-    std::string name{state.lines[0]};
+    std::string name = remove_template(state.lines[0]);
     str::replace(str::trim(name), " ",
                  ""); /* Don't allow spaces in the filename. */
     if (state.output_file.empty()) {

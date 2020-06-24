@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include <glog/logging.h>
 #include <unistd.h>
 
 #include <array>
@@ -22,10 +23,14 @@ class render {
  public:
   void operator()(parse_state &state) {
     /* Render the stripped html to plain text. */
-    state.plain = execute(
+    const std::string part_cmd =
         "elinks -dump 1 -dump-width 90 -no-numbering -no-references "
-        "-dump-charset UTF-8 -force-html " +
-        state.tmp_file);
+        "-dump-charset UTF-8 -force-html ";
+    state.plain = execute(part_cmd + state.tmp_file);
+
+    DLOG(INFO) << "Execute elinks for file:" << state.tmp_file
+               << ", get result:\n"
+               << state.plain;
 
     /* Cleanup a bit. */
     str::replace(state.plain, "[edit]", "");
@@ -37,6 +42,10 @@ class render {
     str::replace(state.plain, "(constructor)", "constructor  ");
     str::replace(state.plain, "(destructor)", "destructor  ");
     str::replace(state.plain, "\\", "\\\\");
+    DLOG(INFO) << "After cleanup:\n" << state.plain;
+    DLOG(INFO) << "Now runnig elinks for original file:" << state.input_file
+               << ", get result:\n"
+               << execute(part_cmd + state.input_file);
   }
 
  private:

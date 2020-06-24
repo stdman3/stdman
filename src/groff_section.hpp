@@ -8,6 +8,7 @@
 */
 
 #pragma once
+#include "str.hpp"
 
 namespace groff_detail {
 extern std::vector<std::string> sections;

@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <glog/logging.h>
+
 #include <fstream>
 #include <stdexcept>
 #include <string>
@@ -19,6 +21,7 @@
 class html {
  public:
   void operator()(parse_state &state) {
+    DLOG(INFO) << "Now trim html file:" << state.input_file;
     /* Read whole file. */
     std::string &html(state.html);
     {
@@ -49,6 +52,7 @@ class html {
     str::replace(html, "\u00a0", " "); /* NBSP sucks */
 
     std::ofstream ofs{state.tmp_file};
+    DLOG(INFO) << "The new tmp file:" << state.tmp_file;
     if (!ofs.is_open()) {
       throw std::runtime_error("failed to open file for writing: " +
                                state.tmp_file);

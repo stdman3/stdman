@@ -18,6 +18,7 @@
 #include "render.hpp"
 
 int main(int argc, char **argv) {
+  google::InitGoogleLogging(argv[0]);
   try {
     parse_state state;
 
