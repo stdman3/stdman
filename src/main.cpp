@@ -7,38 +7,31 @@
   Author: Jesse 'Jeaye' Wilkerson
 */
 
-#include <iostream>
 #include <exception>
+#include <iostream>
 
-#include "parse_state.hpp"
-#include "op.hpp"
 #include "cmdline.hpp"
-#include "html.hpp"
-#include "render.hpp"
 #include "groff.hpp"
+#include "html.hpp"
+#include "op.hpp"
+#include "parse_state.hpp"
+#include "render.hpp"
 
-int main(int argc, char **argv)
-{
-  try
-  {
+int main(int argc, char **argv) {
+  try {
     parse_state state;
 
     op<cmdline>(state, argc, argv);
     op<html>(state);
     op<render>(state);
     op<groff>(state);
-  }
-  catch(helper const &h)
-  { h.help(); }
-  catch(early_exit const &)
-  { }
-  catch(std::exception const &e)
-  {
+  } catch (helper const &h) {
+    h.help();
+  } catch (early_exit const &) {
+  } catch (std::exception const &e) {
     std::cerr << "error: " << e.what() << std::endl;
     return EXIT_FAILURE;
-  }
-  catch(...)
-  {
+  } catch (...) {
     std::cerr << "unknown error" << std::endl;
     return EXIT_FAILURE;
   }

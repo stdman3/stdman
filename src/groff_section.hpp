@@ -9,38 +9,35 @@
 
 #pragma once
 
-namespace groff_detail
-{
-  extern std::vector<std::string> sections;
+namespace groff_detail {
+extern std::vector<std::string> sections;
 
-  void section(std::vector<std::string> &lines)
-  {
-    /* The amount of characters allowed after a section name. */
-    static constexpr const size_t leniency{ 2 };
-    for(auto &l : lines)
-    {
-      std::string tmp{ l };
-      str::trim(tmp);
-      std::string::size_type found{ std::string::npos };
+void section(std::vector<std::string> &lines) {
+  /* The amount of characters allowed after a section name. */
+  static constexpr const size_t leniency{2};
+  for (auto &l : lines) {
+    std::string tmp{l};
+    str::trim(tmp);
+    std::string::size_type found{std::string::npos};
 
-      auto const is_section(std::find_if(sections.begin(), sections.end(),
-      [&](std::string const &s)
-      {
-        found = tmp.find(s);
-        return (found != std::string::npos) && (tmp.size() - s.size()) < leniency;
-      }));
+    auto const is_section(std::find_if(
+        sections.begin(), sections.end(), [&](std::string const &s) {
+          found = tmp.find(s);
+          return (found != std::string::npos) &&
+                 (tmp.size() - s.size()) < leniency;
+        }));
 
-      if(is_section != sections.end() && found == 0)
-      { l = ".SH " + str::ltrim(l); }
+    if (is_section != sections.end() && found == 0) {
+      l = ".SH " + str::ltrim(l);
     }
   }
+}
 
-  /* No, I did not type this by hand. In fact, for future reference:
-     grep -r "<span class=\"toctext\">" | sed 's/^.*<span class\=\"toctext\">//' | \
-     sed 's/<\/span>.*$//' | grep -v "<span>" | sort -u
-   */
-  std::vector<std::string> sections
-  {
+/* No, I did not type this by hand. In fact, for future reference:
+   grep -r "<span class=\"toctext\">" | sed 's/^.*<span class\=\"toctext\">//' |
+   \ sed 's/<\/span>.*$//' | grep -v "<span>" | sort -u
+ */
+std::vector<std::string> sections{
     "3D Graphics",
     "Abstraction",
     "Acquire operation",
@@ -787,6 +784,5 @@ namespace groff_detail
     "Wide character array manipulation",
     "Wide string manimpulation",
     "XML",
-    "xvalue"
-  };
-}
+    "xvalue"};
+}  // namespace groff_detail

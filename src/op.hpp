@@ -10,8 +10,7 @@
 #pragma once
 
 template <typename Op, typename State, typename... Args>
-void op(State &state, Args &&... args)
-{
+void op(State &state, Args &&... args) {
   Op o{};
   o(state, std::forward<Args>(args)...);
 }
