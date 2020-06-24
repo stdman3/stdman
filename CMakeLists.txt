@@ -22,10 +22,16 @@ message(STATUS "Generate mange page with zip file:${ZIPFILE}")
 set(MAN_FOLDER man3)
 add_custom_target(generate
 	COMMAND /bin/sh -c "if [ ! -f ${ZIPFILE} ]\; then wget ${CPPREFERENCE_ARCHIVE_LINK}\; fi"
-	COMMAND unzip -x ${ZIPFILE}
-	COMMAND rm -rf ${MAN_FOLDER} && mkdir ${MAN_FOLDER}
+	COMMAND echo "Uncompress zip file"
+	COMMAND unzip -u -x ${ZIPFILE} > /dev/null 2>&1
+	COMMAND echo "Create folder ${MAN_FOLDER}"
+	COMMAND /bin/sh -c "if [ -d ${MAN_FOLDER} ]\; then rm -rf ${MAN_FOLDER}\; fi"
+	COMMAND mkdir ${MAN_FOLDER}
+	COMMAND echo "Run stdman to generate"
 	COMMAND find reference -print0 | xargs -0 -n 1 -P 4 -I % ${CMAKE_CURRENT_BINARY_DIR}/stdman -d ${MAN_FOLDER} % > /dev/null 2>&1 || (exit 0)
+	COMMAND echo "Clean unneed files"
 	COMMAND find ${MAN_FOLDER} -name '*.3' | grep -v 'std::' | paste -sd " " - | xargs rm || (exit 0)
+	COMMAND echo "Create soft link for alias like std::string"
 	COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/do_link ${MAN_FOLDER} || (exit 0)
 )
 
