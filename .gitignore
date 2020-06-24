@@ -39,3 +39,7 @@ Makefile
 # Operators
 operator*
 man/
+
+_build
+_debug
+_release
