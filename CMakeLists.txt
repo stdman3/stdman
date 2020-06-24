@@ -19,6 +19,7 @@ set(CPPREFERENCE_ARCHIVE_LINK http://upload.cppreference.com/mwiki/images/b/b2/h
 string(REGEX REPLACE "^(.*\/)" "" ZIPFILE ${CPPREFERENCE_ARCHIVE_LINK})
 message(STATUS "Generate mange page with zip file:${ZIPFILE}")
 
+#TODO Fix errors while parsing some html files, now these files are skipped
 set(MAN_FOLDER man3)
 add_custom_target(generate
 	COMMAND /bin/sh -c "if [ ! -f ${ZIPFILE} ]\; then wget ${CPPREFERENCE_ARCHIVE_LINK}\; fi"
@@ -29,7 +30,7 @@ add_custom_target(generate
 	COMMAND mkdir ${MAN_FOLDER}
 	COMMAND echo "Run stdman to generate"
 	COMMAND find reference -print0 | xargs -0 -n 1 -P 4 -I % ${CMAKE_CURRENT_BINARY_DIR}/stdman -d ${MAN_FOLDER} % > /dev/null 2>&1 || (exit 0)
-	COMMAND echo "Clean unneed files"
+	COMMAND echo "Clean uneed files"
 	COMMAND find ${MAN_FOLDER} -name '*.3' | grep -v 'std::' | paste -sd " " - | xargs rm || (exit 0)
 	COMMAND echo "Create soft link for alias like std::string"
 	COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/do_link ${MAN_FOLDER} || (exit 0)
