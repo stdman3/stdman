@@ -35,3 +35,4 @@ add_custom_target(generate
 
 # TODO read destination folder from env
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${MAN_FOLDER} DESTINATION /usr/local/man)
+
