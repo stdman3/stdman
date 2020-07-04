@@ -19,13 +19,10 @@
 
 struct cmdline {
  public:
-  using iterator = std::vector<std::string>::iterator;
-
-  void operator()(parse_state &state, int argc, char **argv) {
+  using iterator = std::vector<std::string>::iterator; void operator()(parse_state &state, int argc, char **argv) {
     state.prog = argv[0];
     --argc, ++argv;
-    if (argc == 0) {
-      throw helper{state.prog};
+    if (argc == 0) { throw helper{state.prog};
     }
 
     std::vector<std::string> args;
