@@ -60,8 +60,7 @@ jobs:
     - name: Generate
       working-directory: '${{runner.workspace}}/_build'
       run: |
-        sudo apt install tree
         make generate
-        sudo make install > /dev/null
+        sudo make install
         mandb
         man std::string
